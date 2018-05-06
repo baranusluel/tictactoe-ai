@@ -3,6 +3,14 @@ public class Cell {
     private boolean isTaken = false;
     private String player = " ";
 
+    public Cell() {};
+
+    //cloning constructor
+    public Cell(Cell another) {
+        isTaken = another.isTaken;
+        player = another.player;
+    }
+
     public boolean getIsTaken() {
         return isTaken;
     }

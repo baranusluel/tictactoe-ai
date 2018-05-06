@@ -1,9 +1,13 @@
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Cloneable {
 
     private Cell[] cells;
     private int cellsTaken = 0;
+
+    public Cell[] getCells() {
+        return cells;
+    }
 
     public Cell getCell(int pos) {
         return cells[pos];
@@ -12,6 +16,18 @@ public class Board {
     public Board() {
         cells = new Cell[]{new Cell(), new Cell(), new Cell(), new Cell(),
             new Cell(), new Cell(), new Cell(), new Cell(), new Cell()} ;
+    }
+
+    //cloning
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Board copy = (Board)super.clone();
+        Cell[] cellsCopy = new Cell[9];
+        for (int i = 0; i < 9; i++) {
+            cellsCopy[i] = new Cell(cells[i]);
+        }
+        copy.cells = cellsCopy;
+        return copy;
     }
 
     public boolean isFull() {
