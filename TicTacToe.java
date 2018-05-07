@@ -7,13 +7,16 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import javafx.event.ActionEvent;
 
 public class TicTacToe extends Application {
 
     static ArrayList<Button> buttons;
+    private static Text text;
     private Game game;
 
     @Override
@@ -33,26 +36,40 @@ public class TicTacToe extends Application {
         flow.setHgap(10);
         flow.setAlignment(javafx.geometry.Pos.CENTER);
 
-        Scene scene = new Scene(flow);
+        text = new Text("Player X's turn");
+        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(flow, text);
+        vbox.setAlignment(javafx.geometry.Pos.CENTER);
+        vbox.setSpacing(20);
+
+        Scene scene = new Scene(vbox);
         stage.setScene(scene);
         stage.setTitle("Tic Tac Toe");
-        stage.setWidth(300);
-        stage.setHeight(320);
+        stage.setWidth(340);
+        stage.setHeight(380);
         stage.setResizable(false);
         stage.show();
 
         game = new Game("X");
     }
 
-    private void btnClick(ActionEvent e) {
+    private void btnClick(ActionEvent evt) {
         if (game.getIsOn()) {
-            int pos = buttons.indexOf(e.getSource());
-            game.makeMove(pos);
-            game.checkForWinner();
-            game.switchPlayer();
-            if (!game.getIsOn()) {
-                // Game over message
+            int pos = buttons.indexOf(evt.getSource());
+            try {
+                game.makeMove(pos);
+            } catch (CellAlreadyTakenException e) {
+                showText("That cell was already taken!");
+                return;
             }
+            game.checkForWinner();
+            if (game.getIsOn())
+                game.switchPlayer();
         }
+    }
+
+    public static void showText(String s) {
+        text.setText(s);
     }
 }

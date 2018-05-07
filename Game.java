@@ -38,7 +38,6 @@ public class Game {
 
     public void makeMove(int pos) {
         //might throw CellAlreadyTakenException
-        //or ArrayIndexOutOfBoundsException
         board.getCell(pos).setPlayer(currentPlayer);
         if (currentPlayer.equals("X")) {
             playerX.add(pos);
@@ -51,17 +50,18 @@ public class Game {
     public void checkForWinner() {
         if (board.isFull()) {
             isOn = false;
-            System.out.println("Draw");
+            TicTacToe.showText("Draw");
         }
         for (ArrayList<Integer> comb : winningCombinations) {
             if (playerO.containsAll(comb) || playerX.containsAll(comb)){
                 isOn = false;
-                System.out.println("Player " + currentPlayer + " won");
+                TicTacToe.showText("Player " + currentPlayer + " won");
             }
         }
     }
 
     public void switchPlayer() {
         currentPlayer = currentPlayer.equals("X") ? "O" : "X";
+        TicTacToe.showText("Player " + currentPlayer + "'s turn");
     }
 }
