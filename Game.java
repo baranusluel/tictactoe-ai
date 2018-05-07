@@ -36,9 +36,7 @@ public class Game {
                     new ArrayList<Integer>(Arrays.asList(2, 4, 6))));
     }
 
-    public void makeMove(String rawInput) {
-        //might throw NumberFormatException
-        int pos = Integer.parseInt(rawInput);
+    public void makeMove(int pos) {
         //might throw CellAlreadyTakenException
         //or ArrayIndexOutOfBoundsException
         board.getCell(pos).setPlayer(currentPlayer);
@@ -53,15 +51,11 @@ public class Game {
     public void checkForWinner() {
         if (board.isFull()) {
             isOn = false;
-            System.out.print("\033[H\033[2J");
-            board.print();
             System.out.println("Draw");
         }
         for (ArrayList<Integer> comb : winningCombinations) {
             if (playerO.containsAll(comb) || playerX.containsAll(comb)){
                 isOn = false;
-                System.out.print("\033[H\033[2J");
-                board.print();
                 System.out.println("Player " + currentPlayer + " won");
             }
         }

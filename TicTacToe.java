@@ -7,58 +7,52 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.control.Button;
+import javafx.stage.StageStyle;
+import javafx.event.ActionEvent;
 
 public class TicTacToe extends Application {
 
+    static ArrayList<Button> buttons;
+    private Game game;
+
     @Override
     public void start(Stage stage) {
+        buttons = new ArrayList<Button>(Arrays.asList(
+            new Button(), new Button(), new Button(),
+            new Button(), new Button(), new Button(),
+            new Button(), new Button(), new Button()));
+        buttons.forEach(b -> {
+                b.setMinWidth(80);
+                b.setMinHeight(80);
+                b.setOnAction(this::btnClick);
+            });
         FlowPane flow = new FlowPane();
+        flow.getChildren().addAll(buttons);
         flow.setVgap(10);
         flow.setHgap(10);
-        flow.setPrefWrapLength(300);
+        flow.setAlignment(javafx.geometry.Pos.CENTER);
 
         Scene scene = new Scene(flow);
         stage.setScene(scene);
-        stage.setTitle("Tic-Tac-Toe");
+        stage.setTitle("Tic Tac Toe");
         stage.setWidth(300);
-        stage.setHeight(300);
+        stage.setHeight(320);
+        stage.setResizable(false);
         stage.show();
+
+        game = new Game("X");
     }
 
-    //human vs human
-    private static void multiplayer() {
-        Scanner scan = new Scanner(System.in);
-        Game game = new Game("X");
-
-        while (game.getIsOn()) {
-            System.out.print("\033[H\033[2J");
-            game.getBoard().print();
-            boolean validMove = false;
-            while (!validMove) {
-                game.getBoard().printDemo();
-                System.out.println("Your move(0-8): ");
-                String pos = scan.nextLine();
-                try {
-                    game.makeMove(pos);
-                    validMove = true;
-                } catch (Exception e) {
-                    System.out.print("\033[H\033[2J");
-                    game.getBoard().print();
-                    System.out.println("Invalid Input. Enter a number 0-8");
-                }
-            }
+    private void btnClick(ActionEvent e) {
+        if (game.getIsOn()) {
+            int pos = buttons.indexOf(e.getSource());
+            game.makeMove(pos);
             game.checkForWinner();
             game.switchPlayer();
+            if (!game.getIsOn()) {
+                // Game over message
+            }
         }
     }
-
-    //human vs computer
-    private static void singleplayer() {
-
-    }
-
-
-    /*public static void main(String[] args) {
-        multiplayer();
-    }*/
 }
