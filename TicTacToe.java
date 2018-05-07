@@ -12,6 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import javafx.application.Platform;
 
 public class TicTacToe extends Application {
 
@@ -21,6 +26,25 @@ public class TicTacToe extends Application {
 
     @Override
     public void start(Stage stage) {
+        boolean multiplayer = false;
+
+        Alert menu = new Alert(Alert.AlertType.CONFIRMATION);
+        menu.setTitle("Tic Tac Toe");
+        menu.setHeaderText("What would you like to play?");
+        menu.setContentText("Select one of the following modes");
+        ButtonType btnSingle = new ButtonType("Player vs AI");
+        ButtonType btnMulti = new ButtonType("Player vs Player");
+        ButtonType btnQuit = new ButtonType("Quit", ButtonData.CANCEL_CLOSE);
+        menu.getButtonTypes().setAll(btnSingle, btnMulti, btnQuit);
+
+        Optional<ButtonType> result = menu.showAndWait();
+        if (!result.isPresent()) {
+            return;
+        }
+        if (result.get() == btnMulti) {
+            multiplayer = true;
+        }
+
         buttons = new ArrayList<Button>(Arrays.asList(
             new Button(), new Button(), new Button(),
             new Button(), new Button(), new Button(),
@@ -51,7 +75,12 @@ public class TicTacToe extends Application {
         stage.setResizable(false);
         stage.show();
 
-        game = new Game("X");
+        if (multiplayer) {
+            game = new Game("X");
+        } else {
+            // single player mode
+            Platform.exit();
+        }
     }
 
     private void btnClick(ActionEvent evt) {
