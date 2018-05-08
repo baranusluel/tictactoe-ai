@@ -3,43 +3,131 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import javafx.application.Platform;
 
-public class TicTacToe {
+public class TicTacToe extends Application {
 
-    //human vs human
-    private static void multiplayer() {
-        Scanner scan = new Scanner(System.in);
-        Game game = new Game("X");
+    static ArrayList<Button> buttons;
+    private static Text text;
+    private Game game;
 
-        while (game.getIsOn()) {
-            System.out.print("\033[H\033[2J");
-            game.getBoard().print();
-            boolean validMove = false;
-            while (!validMove) {
-                game.getBoard().printDemo();
-                System.out.println("Your move(0-8): ");
-                String pos = scan.nextLine();
-                try {
-                    game.makeMove(pos);
-                    validMove = true;
-                } catch (Exception e) {
-                    System.out.print("\033[H\033[2J");
-                    game.getBoard().print();
-                    System.out.println("Invalid Input. Enter a number 0-8");
-                }
-            }
-            game.checkForWinner();
-            game.switchPlayer();
+    @Override
+    public void start(Stage stage) {
+        boolean multiplayer = false;
+
+        Alert menu = new Alert(Alert.AlertType.CONFIRMATION);
+        menu.setGraphic(null);
+        menu.setTitle("Tic Tac Toe");
+        menu.setHeaderText("What would you like to play?");
+        menu.setContentText("Select one of the following modes");
+        ButtonType btnSingle = new ButtonType("Player vs AI");
+        ButtonType btnMulti = new ButtonType("Player vs Player");
+        ButtonType btnQuit = new ButtonType("Quit", ButtonData.CANCEL_CLOSE);
+        menu.getButtonTypes().setAll(btnSingle, btnMulti, btnQuit);
+
+        Optional<ButtonType> result = menu.showAndWait();
+        if (!result.isPresent()) {
+            return;
+        }
+        if (result.get() == btnMulti) {
+            multiplayer = true;
+        }
+
+        buttons = new ArrayList<Button>(Arrays.asList(
+            new Button(), new Button(), new Button(),
+            new Button(), new Button(), new Button(),
+            new Button(), new Button(), new Button()));
+        buttons.forEach(b -> {
+                b.setMinWidth(80);
+                b.setMinHeight(80);
+                b.setStyle("-fx-background-color: #b7b7b7;" +
+                        "-fx-text-fill: #3a5368;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font: 28px 'Sans-serif';");
+                b.setOnAction(this::btnClick);
+            });
+        FlowPane flow = new FlowPane();
+        flow.getChildren().addAll(buttons);
+        flow.setVgap(10);
+        flow.setHgap(10);
+        flow.setAlignment(javafx.geometry.Pos.CENTER);
+
+        text = new Text("Player X's turn");
+        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        text.setStyle("-fx-fill: white;" +
+                "-fx-font: 16px 'Monospace';");
+
+        Button restartButton = new Button("Restart");
+        restartButton.setOnAction(e -> {
+                game = new Game("X");
+                showText("Player X's turn");
+                buttons.forEach(b -> {
+                        b.setText("");
+                    });
+            });
+        restartButton.setStyle("-fx-background-color: #d3d3d3;" +
+                "-fx-font: 14px 'Sans-serif';");
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction(e -> Platform.exit());
+        quitButton.setStyle("-fx-background-color: #d3d3d3;" +
+                "-fx-font: 14px 'Sans-serif';");
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(restartButton, quitButton);
+        hbox.setAlignment(javafx.geometry.Pos.CENTER);
+        hbox.setSpacing(25);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(flow, text, hbox);
+        vbox.setAlignment(javafx.geometry.Pos.CENTER);
+        vbox.setSpacing(15);
+        vbox.setStyle("-fx-background-color: #474747;");
+
+        Scene scene = new Scene(vbox);
+        stage.setScene(scene);
+        stage.setTitle("Tic Tac Toe");
+        stage.setWidth(340);
+        stage.setHeight(400);
+        stage.setResizable(false);
+        stage.show();
+
+        if (multiplayer) {
+            game = new Game("X");
+        } else {
+            // single player mode
+            Platform.exit();
         }
     }
 
-    //human vs computer
-    private static void singleplayer() {
-
+    private void btnClick(ActionEvent evt) {
+        if (game.getIsOn()) {
+            int pos = buttons.indexOf(evt.getSource());
+            try {
+                game.makeMove(pos);
+            } catch (CellAlreadyTakenException e) {
+                showText("That cell was already taken!");
+                return;
+            }
+            game.checkForWinner();
+            if (game.getIsOn())
+                game.switchPlayer();
+        }
     }
 
-
-    public static void main(String[] args) {
-        multiplayer();
+    public static void showText(String s) {
+        text.setText(s);
     }
 }
