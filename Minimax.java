@@ -16,10 +16,6 @@ public class Minimax {
         }
     }
 
-    public void makeMove() {
-        game.makeMove(calculateMove(practiceGame));
-    }
-
     private int calculateMove(Game g) {
         if (isOver(g)) {
             return getScore(g);
@@ -36,9 +32,21 @@ public class Minimax {
             }
         }
         if (g.getCurrentPlayer().equals("X")) {
-            int max = 3;
+            //max
+            int maxIndex = 0;
+            for (int i = 0; i < scores.size(); i++) {
+                maxIndex = (scores.get(i) > scores.get(maxIndex)) ? i : maxIndex;
+            }
+            choice = moves[maxIndex];
+            return scores[maxIndex];
         } else {
-            int min = 3;
+            //min
+            int minIndex = 0;
+            for (int i = 0; i < scores.size(); i++) {
+                minIndex = (scores.get(i) > scores.get(maxIndex)) ? i : minIndex;
+            }
+            choice = moves[inIndex];
+            return scores[minIndex];
         }
     }
 
