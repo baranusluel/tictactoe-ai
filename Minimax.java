@@ -1,52 +1,57 @@
-import java.util.Collections;
+import java.util.Scanner;
+import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Arrays;
 
 public class Minimax {
 
-    private Game practiceGame;
     private Game game;
     private int choice;
 
     public Minimax(Game g) {
         game = g;
-        try {
-            practiceGame = (Game)g.clone();
-        } catch (Exception e) {
-            System.out.println("Game cloning didn't work so great");
-        }
     }
 
-    private int calculateMove(Game g) {
+    public void aiMakeMove() throws CloneNotSupportedException {
+        calculateMove((Game)game.clone());
+        game.makeMove(Integer.toString(choice));
+    }
+
+    private int calculateMove(Game g) throws CloneNotSupportedException {
         if (isOver(g)) {
             return getScore(g);
         }
-        ArrayList<Integer> scores;
-        ArrayList<Integer> moves;
+        ArrayList<Integer> scores = new ArrayList<>();
+        ArrayList<Integer> moves = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            Cell c =  game.getBoard().getCell(i);
+            Cell c =  g.getBoard().getCell(i);
             if (!c.getIsTaken()) {
                 Game possibleGame = (Game)g.clone();
-                possibleGame.aiMakeMove(i);
+                possibleGame.makeMove(Integer.toString(i));
+                possibleGame.switchPlayer();
                 scores.add(calculateMove(possibleGame));
                 moves.add(i);
             }
         }
-        if (g.getCurrentPlayer().equals("X")) {
+        if (g.getCurrentPlayer().equals("O")) {
             //max
             int maxIndex = 0;
             for (int i = 0; i < scores.size(); i++) {
                 maxIndex = (scores.get(i) > scores.get(maxIndex)) ? i : maxIndex;
             }
-            choice = moves[maxIndex];
-            return scores[maxIndex];
+            choice = moves.get(maxIndex);
+            System.out.println(choice + "\n" + moves + "\n" + scores); // debug
+            return scores.get(maxIndex);
         } else {
             //min
             int minIndex = 0;
             for (int i = 0; i < scores.size(); i++) {
-                minIndex = (scores.get(i) > scores.get(maxIndex)) ? i : minIndex;
+                minIndex = (scores.get(i) > scores.get(minIndex)) ? i : minIndex;
             }
-            choice = moves[inIndex];
-            return scores[minIndex];
+            choice = moves.get(minIndex);
+            System.out.println(choice); //debug
+            return scores.get(minIndex);
         }
     }
 
@@ -61,7 +66,7 @@ public class Minimax {
                     new ArrayList<Integer>(Arrays.asList(0, 4, 8)),
                     new ArrayList<Integer>(Arrays.asList(2, 4, 6))));
         for (ArrayList<Integer> comb : winCombs) {
-            if (playerO.containsAll(comb) || playerX.containsAll(comb)){
+            if (g.playerO.containsAll(comb) || g.playerX.containsAll(comb)){
                 return true;
             }
         }
@@ -79,9 +84,9 @@ public class Minimax {
                     new ArrayList<Integer>(Arrays.asList(0, 4, 8)),
                     new ArrayList<Integer>(Arrays.asList(2, 4, 6))));
         for (ArrayList<Integer> comb : winCombs) {
-            if (playerX.containsAll(comb)) {
+            if (g.playerX.containsAll(comb)) {
                 return -1;
-            } else if (playerO.containsAll(comb)) {
+            } else if (g.playerO.containsAll(comb)) {
                 return 1;
             }
         }

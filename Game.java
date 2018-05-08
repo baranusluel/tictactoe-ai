@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public class Game implements Cloneable {
 
-    private ArrayList<Integer> playerX = new ArrayList<>();
-    private ArrayList<Integer> playerO = new ArrayList<>();
+    public ArrayList<Integer> playerX = new ArrayList<>();
+    public ArrayList<Integer> playerO = new ArrayList<>();
     private boolean isOn;
     private String currentPlayer;
     private Board board;
@@ -54,6 +54,7 @@ public class Game implements Cloneable {
         }
         copy.playerX = xCopy;
         copy.playerO = oCopy;
+        //copy.currentPlayer = currentPlayer;
         return copy;
     }
 
@@ -71,23 +72,7 @@ public class Game implements Cloneable {
         board.takeCell();
     }
 
-    public void aiMakeMove(int pos) {
-        board.getCell(pos).setPlayer(currentPlayer);
-        if (currentPlayer.equals("X")) {
-            playerX.add(pos);
-        } else {
-            playerO.add(pos);
-        }
-        board.takeCell();
-    }
-
     public void checkForWinner() {
-        if (board.isFull()) {
-            isOn = false;
-            System.out.print("\033[H\033[2J");
-            board.print();
-            System.out.println("Draw");
-        }
         HashSet<ArrayList<Integer>> winCombs = new HashSet<>(Arrays
             .asList(new ArrayList<Integer>(Arrays.asList(0, 1, 2)),
                     new ArrayList<Integer>(Arrays.asList(3, 4, 5)),
@@ -103,7 +88,14 @@ public class Game implements Cloneable {
                 System.out.print("\033[H\033[2J");
                 board.print();
                 System.out.println("Player " + currentPlayer + " won");
+                return;
             }
+        }
+        if (board.isFull()) {
+            isOn = false;
+            System.out.print("\033[H\033[2J");
+            board.print();
+            System.out.println("Draw");
         }
     }
 
