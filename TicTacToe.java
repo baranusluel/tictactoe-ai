@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
@@ -70,17 +71,36 @@ public class TicTacToe extends Application {
         text.setStyle("-fx-fill: white;" +
                 "-fx-font: 16px 'Monospace';");
 
+        Button restartButton = new Button("Restart");
+        restartButton.setOnAction(e -> {
+                game = new Game("X");
+                showText("Player X's turn");
+                buttons.forEach(b -> {
+                        b.setText("");
+                    });
+            });
+        restartButton.setStyle("-fx-background-color: #d3d3d3;" +
+                "-fx-font: 14px 'Sans-serif';");
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction(e -> Platform.exit());
+        quitButton.setStyle("-fx-background-color: #d3d3d3;" +
+                "-fx-font: 14px 'Sans-serif';");
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(restartButton, quitButton);
+        hbox.setAlignment(javafx.geometry.Pos.CENTER);
+        hbox.setSpacing(25);
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(flow, text);
+        vbox.getChildren().addAll(flow, text, hbox);
         vbox.setAlignment(javafx.geometry.Pos.CENTER);
-        vbox.setSpacing(20);
+        vbox.setSpacing(15);
         vbox.setStyle("-fx-background-color: #474747;");
 
         Scene scene = new Scene(vbox);
         stage.setScene(scene);
         stage.setTitle("Tic Tac Toe");
         stage.setWidth(340);
-        stage.setHeight(380);
+        stage.setHeight(400);
         stage.setResizable(false);
         stage.show();
 
