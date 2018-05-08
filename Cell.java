@@ -3,7 +3,7 @@ public class Cell {
     private boolean isTaken = false;
     private String player = " ";
     private int pos;
-    
+
     public Cell(int pos) {
         this.pos = pos;
     }

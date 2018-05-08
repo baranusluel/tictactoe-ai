@@ -29,6 +29,7 @@ public class TicTacToe extends Application {
         boolean multiplayer = false;
 
         Alert menu = new Alert(Alert.AlertType.CONFIRMATION);
+        menu.setGraphic(null);
         menu.setTitle("Tic Tac Toe");
         menu.setHeaderText("What would you like to play?");
         menu.setContentText("Select one of the following modes");
@@ -52,6 +53,10 @@ public class TicTacToe extends Application {
         buttons.forEach(b -> {
                 b.setMinWidth(80);
                 b.setMinHeight(80);
+                b.setStyle("-fx-background-color: #b7b7b7;" +
+                        "-fx-text-fill: #3a5368;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font: 28px 'Sans-serif';");
                 b.setOnAction(this::btnClick);
             });
         FlowPane flow = new FlowPane();
@@ -62,10 +67,14 @@ public class TicTacToe extends Application {
 
         text = new Text("Player X's turn");
         text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        text.setStyle("-fx-fill: white;" +
+                "-fx-font: 16px 'Monospace';");
+
         VBox vbox = new VBox();
         vbox.getChildren().addAll(flow, text);
         vbox.setAlignment(javafx.geometry.Pos.CENTER);
         vbox.setSpacing(20);
+        vbox.setStyle("-fx-background-color: #474747;");
 
         Scene scene = new Scene(vbox);
         stage.setScene(scene);
