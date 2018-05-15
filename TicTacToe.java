@@ -28,7 +28,9 @@ public class TicTacToe {
                     System.out.println("Invalid Input. Enter a number 0-8");
                 }
             }
-            game.checkForWinner();
+            if (game.checkForWinner()) {
+                break;
+            }
             game.switchPlayer();
         }
     }
@@ -56,20 +58,25 @@ public class TicTacToe {
                     System.out.println("Invalid Input. Enter a number 0-8");
                 }
             }
-            game.checkForWinner();
+            if (game.checkForWinner()) {
+                break;
+            }
             game.switchPlayer();
             try {
                 ai.aiMakeMove();
             } catch (CloneNotSupportedException e) {
                 System.out.println("Ai isn't working");
             }
-            game.checkForWinner();
+            if (game.checkForWinner()) {
+                break;
+            }
             game.switchPlayer();
         }
     }
 
 
     public static void main(String[] args) {
+
         singleplayer();
     }
 }

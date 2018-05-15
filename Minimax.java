@@ -19,11 +19,15 @@ public class Minimax {
     }
 
     private int calculateMove(Game g) throws CloneNotSupportedException {
+        //get score if game is over
         if (isOver(g)) {
             return getScore(g);
         }
+        //arrays have identical size and contain paired data
+        //might be better to use a map
         ArrayList<Integer> scores = new ArrayList<>();
         ArrayList<Integer> moves = new ArrayList<>();
+        //itirate through all available moves recursing on each
         for (int i = 0; i < 9; i++) {
             Cell c =  g.getBoard().getCell(i);
             if (!c.getIsTaken()) {
@@ -34,27 +38,27 @@ public class Minimax {
                 moves.add(i);
             }
         }
+        //decide which move will be made
         if (g.getCurrentPlayer().equals("O")) {
-            //max
+            //max, computer's turn
             int maxIndex = 0;
             for (int i = 0; i < scores.size(); i++) {
                 maxIndex = (scores.get(i) > scores.get(maxIndex)) ? i : maxIndex;
             }
             choice = moves.get(maxIndex);
-            System.out.println(choice + "\n" + moves + "\n" + scores); // debug
             return scores.get(maxIndex);
         } else {
-            //min
+            //min, human's turn
             int minIndex = 0;
             for (int i = 0; i < scores.size(); i++) {
-                minIndex = (scores.get(i) > scores.get(minIndex)) ? i : minIndex;
+                minIndex = (scores.get(i) < scores.get(minIndex)) ? i : minIndex;
             }
             choice = moves.get(minIndex);
-            System.out.println(choice); //debug
             return scores.get(minIndex);
         }
     }
 
+    //checks if the game is over
     private boolean isOver(Game g) {
         HashSet<ArrayList<Integer>> winCombs = new HashSet<>(Arrays
             .asList(new ArrayList<Integer>(Arrays.asList(0, 1, 2)),
@@ -73,6 +77,7 @@ public class Minimax {
         return g.getBoard().isFull();
     }
 
+    //gets the score for minimax for an ended game
     private int getScore(Game g) {
         HashSet<ArrayList<Integer>> winCombs = new HashSet<>(Arrays
             .asList(new ArrayList<Integer>(Arrays.asList(0, 1, 2)),

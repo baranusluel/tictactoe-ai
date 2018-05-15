@@ -72,7 +72,7 @@ public class Game implements Cloneable {
         board.takeCell();
     }
 
-    public void checkForWinner() {
+    public boolean checkForWinner() {
         HashSet<ArrayList<Integer>> winCombs = new HashSet<>(Arrays
             .asList(new ArrayList<Integer>(Arrays.asList(0, 1, 2)),
                     new ArrayList<Integer>(Arrays.asList(3, 4, 5)),
@@ -88,7 +88,7 @@ public class Game implements Cloneable {
                 System.out.print("\033[H\033[2J");
                 board.print();
                 System.out.println("Player " + currentPlayer + " won");
-                return;
+                return true;
             }
         }
         if (board.isFull()) {
@@ -96,7 +96,9 @@ public class Game implements Cloneable {
             System.out.print("\033[H\033[2J");
             board.print();
             System.out.println("Draw");
+            return true;
         }
+        return false;
     }
 
     public void switchPlayer() {
