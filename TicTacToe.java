@@ -23,10 +23,11 @@ public class TicTacToe extends Application {
 
     static ArrayList<Button> buttons;
     private static Text text;
-    private Game game;
+    private Game game = new Game("X");
 
     @Override
     public void start(Stage stage) {
+        //menu
         boolean multiplayer = false;
 
         Alert menu = new Alert(Alert.AlertType.CONFIRMATION);
@@ -45,8 +46,11 @@ public class TicTacToe extends Application {
         }
         if (result.get() == btnMulti) {
             multiplayer = true;
+        } else if (result.get() == btnQuit) {
+            Platform.exit();
         }
 
+        //game
         buttons = new ArrayList<Button>(Arrays.asList(
             new Button(), new Button(), new Button(),
             new Button(), new Button(), new Button(),
@@ -112,9 +116,9 @@ public class TicTacToe extends Application {
         }
     }
 
-    private void btnClick(ActionEvent evt) {
+    private void btnClick(ActionEvent event) {
         if (game.getIsOn()) {
-            int pos = buttons.indexOf(evt.getSource());
+            int pos = buttons.indexOf(event.getSource());
             try {
                 game.makeMove(pos);
             } catch (CellAlreadyTakenException e) {
