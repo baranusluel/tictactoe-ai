@@ -12,15 +12,6 @@ public class Game implements Cloneable {
     private String currentPlayer;
     private Board board;
 
-    //debug
-    public String toString() {
-        board.print();
-        return "playerX: " + playerX + "\n"
-                + "playerO: " + playerO + "\n"
-                + isOn + "\n " + currentPlayer;
-
-    }
-
     public String getCurrentPlayer() {
         return currentPlayer;
     }
@@ -58,11 +49,8 @@ public class Game implements Cloneable {
         return copy;
     }
 
-    public void makeMove(String rawInput) {
-        //might throw NumberFormatException
-        int pos = Integer.parseInt(rawInput);
+    public void makeMove(int pos) {
         //might throw CellAlreadyTakenException
-        //or ArrayIndexOutOfBoundsException
         board.getCell(pos).setPlayer(currentPlayer);
         if (currentPlayer.equals("X")) {
             playerX.add(pos);
@@ -72,7 +60,11 @@ public class Game implements Cloneable {
         board.takeCell();
     }
 
-    public boolean checkForWinner() {
+    public void checkForWinner() {
+        if (board.isFull()) {
+            isOn = false;
+            TicTacToe.showText("Draw");
+        }
         HashSet<ArrayList<Integer>> winCombs = new HashSet<>(Arrays
             .asList(new ArrayList<Integer>(Arrays.asList(0, 1, 2)),
                     new ArrayList<Integer>(Arrays.asList(3, 4, 5)),
@@ -83,25 +75,15 @@ public class Game implements Cloneable {
                     new ArrayList<Integer>(Arrays.asList(0, 4, 8)),
                     new ArrayList<Integer>(Arrays.asList(2, 4, 6))));
         for (ArrayList<Integer> comb : winCombs) {
-            if (playerO.containsAll(comb) || playerX.containsAll(comb)){
+            if (playerO.containsAll(comb) || playerX.containsAll(comb)) {
                 isOn = false;
-                System.out.print("\033[H\033[2J");
-                board.print();
-                System.out.println("Player " + currentPlayer + " won");
-                return true;
+                TicTacToe.showText("Player " + currentPlayer + " won");
             }
         }
-        if (board.isFull()) {
-            isOn = false;
-            System.out.print("\033[H\033[2J");
-            board.print();
-            System.out.println("Draw");
-            return true;
-        }
-        return false;
     }
 
     public void switchPlayer() {
         currentPlayer = currentPlayer.equals("X") ? "O" : "X";
+        TicTacToe.showText("Player " + currentPlayer + "'s turn");
     }
 }

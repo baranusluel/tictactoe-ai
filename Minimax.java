@@ -15,7 +15,8 @@ public class Minimax {
 
     public void aiMakeMove() throws CloneNotSupportedException {
         calculateMove((Game)game.clone());
-        game.makeMove(Integer.toString(choice));
+        game.makeMove(choice);
+        TicTacToe.buttons.get(choice).setText("O");
     }
 
     private int calculateMove(Game g) throws CloneNotSupportedException {
@@ -32,7 +33,7 @@ public class Minimax {
             Cell c =  g.getBoard().getCell(i);
             if (!c.getIsTaken()) {
                 Game possibleGame = (Game)g.clone();
-                possibleGame.makeMove(Integer.toString(i));
+                possibleGame.makeMove(i);
                 possibleGame.switchPlayer();
                 scores.add(calculateMove(possibleGame));
                 moves.add(i);
