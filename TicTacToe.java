@@ -69,12 +69,7 @@ public class TicTacToe extends Application {
         flow.setHgap(10);
         flow.setAlignment(javafx.geometry.Pos.CENTER);
 
-        text = new Text();
-        if (multiplayer) {
-            text.setText("Player X's turn");
-        } else {
-            text.setText(" ");
-        }
+        text = new Text("Player X's turn");
         text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         text.setStyle("-fx-fill: white;" +
                 "-fx-font: 16px 'Monospace';");
@@ -122,9 +117,10 @@ public class TicTacToe extends Application {
                 buttons.get(pos).setText(game.getBoard().getCell(pos).getPlayer()); //move all gui in this class
                 if (!multiplayer) {
                     game.checkForWinner();
-                    if (game.getIsOn())
+                    if (game.getIsOn()) {
                         game.switchPlayer();
-                    ai.aiMakeMove();
+                        ai.aiMakeMove();
+                    }
                 }
             } catch (CellAlreadyTakenException e) {
                 showText("That cell was already taken!");
