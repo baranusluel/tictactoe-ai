@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Minimax {
 
@@ -42,20 +43,38 @@ public class Minimax {
         //decide which move will be made
         if (g.getCurrentPlayer().equals("O")) {
             //max, computer's turn
-            int maxIndex = 0;
+            ArrayList<Integer> maxIndeces = new ArrayList<>(Arrays.asList(0));
             for (int i = 0; i < scores.size(); i++) {
-                maxIndex = (scores.get(i) > scores.get(maxIndex)) ? i : maxIndex;
+                int score = scores.get(i);
+                int currentMax = scores.get(maxIndeces.get(0));
+                if (score > currentMax) {
+                    maxIndeces.clear();
+                    maxIndeces.add(i);
+                } else if (score == currentMax) {
+                    maxIndeces.add(i);
+                }
             }
-            choice = moves.get(maxIndex);
-            return scores.get(maxIndex);
+            Random rand = new Random();
+            int pick = rand.nextInt(maxIndeces.size());
+            choice = moves.get(maxIndeces.get(pick));
+            return scores.get(maxIndeces.get(pick));
         } else {
             //min, human's turn
-            int minIndex = 0;
+            ArrayList<Integer> minIndeces = new ArrayList<>(Arrays.asList(0));
             for (int i = 0; i < scores.size(); i++) {
-                minIndex = (scores.get(i) < scores.get(minIndex)) ? i : minIndex;
+                int score = scores.get(i);
+                int currentMin = scores.get(minIndeces.get(0));
+                if (score < currentMin) {
+                    minIndeces.clear();
+                    minIndeces.add(i);
+                } else if (score == currentMin) {
+                    minIndeces.add(i);
+                }
             }
-            choice = moves.get(minIndex);
-            return scores.get(minIndex);
+            Random rand = new Random();
+            int pick = rand.nextInt(minIndeces.size());
+            choice = moves.get(minIndeces.get(pick));
+            return scores.get(minIndeces.get(pick));
         }
     }
 
@@ -71,7 +90,7 @@ public class Minimax {
                     new ArrayList<Integer>(Arrays.asList(0, 4, 8)),
                     new ArrayList<Integer>(Arrays.asList(2, 4, 6))));
         for (ArrayList<Integer> comb : winCombs) {
-            if (g.playerO.containsAll(comb) || g.playerX.containsAll(comb)){
+            if (g.playerO.containsAll(comb) || g.playerX.containsAll(comb)) {
                 return true;
             }
         }
